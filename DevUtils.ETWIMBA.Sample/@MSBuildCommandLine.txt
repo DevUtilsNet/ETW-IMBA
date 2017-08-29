@@ -1,0 +1,7 @@
+Y:\Congree\Dev-DevExpress.v14.1\Congree\Congree.csproj
+/t:build
+/v:diag
+/clp:Verbosity=m
+/p:MSBuildTargetsVerbose=true
+/p:IMBABinPath=Y:\ETW-IMBA\Dev\DevUtils.ETWIMBA.Build\bin\Debug\
+/l:XmlFileLogger,"C:\Program Files (x86)\MSBuild\ExtensionPack\4.0\MSBuild.ExtensionPack.Loggers.dll"

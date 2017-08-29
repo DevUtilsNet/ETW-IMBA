@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>DevUtils.ETWIMBA</id>
+		<version>2.0.1</version>
+		<title>DevUtils ETW IMBA</title>
+		<authors>DevUtils</authors>
+		<projectUrl>http://devutils.net/etwimba</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>This package includes DevUtils.ETWIMBA for firing ETW events from managed code and Performance Counters. It enables defining a strongly typed specification of an ETW provider that can be called by managed code. This package provides a newer version that has more features. It is meant to be used as a stop gap until those features it contains are ported to (System.Diagnostics.Tracing.EventSource).</description>
+		<copyright>Copyright © 2015 DevUtils</copyright>
+		<tags>ETW EventSource EventLog</tags>
+	</metadata>
+	<files>
+		<file src="Tracing\MyEIEventSource.cs.pp" target="content\Tracing\MyEIEventSource.cs.pp" />
+		<file src="Diagnostics\Counters\MyCounterSource.cs.pp" target="content\Diagnostics\Counters\MyCounterSource.cs.pp" />
+
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.dll" target="lib\net45\DevUtils.ETWIMBA.dll" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.xml" target="lib\net45\DevUtils.ETWIMBA.XML" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.dll" target="build\net45\DevUtils.ETWIMBA.dll" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.xml" target="build\net45\DevUtils.ETWIMBA.xml" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.targets" target="build\net45\DevUtils.ETWIMBA.targets" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.Build.dll" target="build\net45\DevUtils.ETWIMBA.Build.dll" />
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\DevUtils.ETWIMBA.Build.XML" target="build\net45\DevUtils.ETWIMBA.Build.XML" />
+
+		<file src="..\DevUtils.ETWIMBA.Build\bin\Release\Utils\x86\*.*" target="build\net45\Utils\x86\" />
+	</files>
+</package>

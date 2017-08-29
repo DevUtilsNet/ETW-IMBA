@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5FB2BB1A-C129-4F8F-A24A-9E9727171AC3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevUtils.ETWIMBA</RootNamespace>
+    <AssemblyName>DevUtils.ETWIMBA</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\DevUtils.ETWIMBA.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Release\DevUtils.ETWIMBA.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DevUtils.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\Properties\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Diagnostics\Counters\CounterAggregate.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeDisplayAsHexAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeDisplayAsRealAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeNoDigitGroupingAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeNoDisplayAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeReferenceAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeBaseAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterAttributeName.cs" />
+    <Compile Include="Diagnostics\Counters\CounterDetailLevel.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSet.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSetAttribute.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSetInstance.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSetInstanceExtensions.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSetInstances.cs" />
+    <Compile Include="Diagnostics\Counters\CounterType.cs" />
+    <Compile Include="Diagnostics\Counters\Extensions\CounterAttributeExtensions.cs" />
+    <Compile Include="Diagnostics\Counters\Extensions\CounterSetAttributeExtensions.cs" />
+    <Compile Include="Diagnostics\Counters\Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\RequiredDescriptionAttributeExtensions.cs" />
+    <Compile Include="Extensions\RequiredGuidAttributeExtensions.cs" />
+    <Compile Include="Extensions\MemberInfoExtensions.cs" />
+    <Compile Include="Extensions\RequiredNameAttributeExtensions.cs" />
+    <Compile Include="Extensions\RequiredUriAttributeExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="IRequiredDescriptionAttribute.cs" />
+    <Compile Include="IRequiredGuidAttribute.cs" />
+    <Compile Include="IRequiredNameAttribute.cs" />
+    <Compile Include="IRequiredUriAttribute.cs" />
+    <Compile Include="Reflection\Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Tracing\Extensions\TypeExtensions.cs" />
+    <Compile Include="StringValueAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SDILReader\ILInstruction.cs" />
+    <Compile Include="SDILReader\MethodBodyReader.cs" />
+    <Compile Include="Tracing\EIChannelAttribute.cs" />
+    <Compile Include="Tracing\EIChannelImportAttribute.cs" />
+    <Compile Include="Tracing\EIChannelIsolation.cs" />
+    <Compile Include="Tracing\EIChannelLoggingAttribute.cs" />
+    <Compile Include="Tracing\EIChannelPublishingAttribute.cs" />
+    <Compile Include="Tracing\EIChannelType.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSource.cs" />
+    <Compile Include="Diagnostics\Counters\CounterSourceAttribute.cs" />
+    <Compile Include="Tracing\EIEventChannel.cs" />
+    <Compile Include="Tracing\EIEventDescriptionAttribute.cs" />
+    <Compile Include="Tracing\EIEventLevel.cs" />
+    <Compile Include="Tracing\EIEventProvider.cs" />
+    <Compile Include="Tracing\EIEventSource.cs" />
+    <Compile Include="Tracing\EIEventSourceAttribute.cs" />
+    <Compile Include="Tracing\EIEventTraceAttribute.cs" />
+    <Compile Include="Tracing\EIValidateException.cs" />
+    <Compile Include="Tracing\Extensions\ReflectExtensions.cs" />
+    <Compile Include="Tracing\NativeMethods.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DevUtils.snk" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

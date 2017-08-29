@@ -1,0 +1,133 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<IMBABinPath>$(MSBuildThisFileDirectory)</IMBABinPath>
+		<IMBAToolsPath>$(MSBuildThisFileDirectory)Utils\x86</IMBAToolsPath>
+	</PropertyGroup>
+
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBACTRPP" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBALodctr" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBAUnlodctr" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBARc" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBAMc" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBALink" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBAWevtutil" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBAFindProviders" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+	<UsingTask TaskName="DevUtils.ETWIMBA.Build.Tasks.IMBAGenerateManifest" AssemblyFile="$(IMBABinPath)\DevUtils.ETWIMBA.Build.dll"/>
+
+	<ItemGroup>
+		<IMBAManifest Include="@(IntermediateAssembly->'%(RelativeDir)%(Filename).IM.xml')">
+			<ResourcesDll>@(IntermediateAssembly->'%(RelativeDir)%(Filename).IM.dll')</ResourcesDll>
+		</IMBAManifest>
+	</ItemGroup>
+
+	<Target Name="IMBAGetProviders" AfterTargets="CoreCompile">
+
+		<IMBAFindProviders InputAssembly="@(IntermediateAssembly)" References="@(ReferencePath)" >
+			<Output TaskParameter="Providers" ItemName="IMBAProviders"/>
+		</IMBAFindProviders>
+
+		<ItemGroup>
+			<IMBAProvidersEvents Include="@(IMBAProviders)" Condition="'%(IMBAProviders.Type)' == 'Events'"/>
+			<IMBAProvidersCounters Include="@(IMBAProviders)" Condition="'%(IMBAProviders.Type)' == 'Counters'"/>
+		</ItemGroup>
+
+		<PropertyGroup>
+			<IMBAProvidersEventsExists Condition="@(IMBAProvidersEvents) != ''">true</IMBAProvidersEventsExists>
+			<IMBAProvidersCountersExists Condition="@(IMBAProvidersCounters) != ''">true</IMBAProvidersCountersExists>
+		</PropertyGroup>
+
+		<ItemGroup Condition="'@(IMBAProviders)' != ''">
+			<!--<FileWrites Include="@(IMBAManifest)" />-->
+			<FileWrites Include="%(IMBAManifest.ResourcesDll)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="IMBAGenerateManifestFile" Inputs="@(IntermediateAssembly)" Outputs="@(IMBAManifest)" DependsOnTargets="IMBAGetProviders" Condition="'@(IMBAProviders)' != ''">
+
+		<IMBAGenerateManifest InputAssembly="@(IntermediateAssembly)" References="@(ReferencePath)" Providers="@(IMBAProviders)" ManifestFile="@(IMBAManifest)"/>
+
+	</Target>
+
+	<Target Name="IMBAGenerateManifestFileRc" Inputs="@(IMBAManifest)" Outputs="@(IMBAManifest->'%(ResourcesDll)')" DependsOnTargets="IMBAGenerateManifestFile" >
+
+		<IMBAMc Source="%(IMBAManifest.Identity)" ToolPath="$(IMBAToolsPath)" Condition="'$(IMBAProvidersEventsExists)' == 'true'" />
+		<IMBACTRPP Source="%(IMBAManifest.Identity)" ToolPath="$(IMBAToolsPath)" Condition="'$(IMBAProvidersCountersExists)' == 'true'" />
+
+	</Target>
+
+	<Target Name="IMBACompileManifestFileRes" Inputs="@(IMBAManifest)" Outputs="@(IMBAManifest->'%(ResourcesDll)')" DependsOnTargets="IMBAGenerateManifestFileRc">
+
+		<ItemGroup Condition="Exists(@(IMBAManifest->'%(RelativeDir)%(Filename).mc.rc'))" >
+			<IMBAManifestH Include="%(IMBAManifest.RelativeDir)%(IMBAManifest.Filename).mc.h" />
+			<IMBAManifestRc Include="%(IMBAManifest.RelativeDir)%(IMBAManifest.Filename).mc.rc" />
+			<IMBAManifestBin Include="%(IMBAManifest.RelativeDir)%(IMBAManifest.Filename)*.bin" />
+		</ItemGroup>
+
+		<ItemGroup Condition="Exists(@(IMBAManifest->'%(RelativeDir)%(Filename).ctrpp.rc'))" >
+			<IMBAManifestRc Include="%(IMBAManifest.RelativeDir)%(IMBAManifest.Filename).ctrpp.rc" />
+		</ItemGroup>
+
+		<IMBARc Source="%(IMBAManifestRc.Identity)" ToolPath="$(IMBAToolsPath)" Condition="Exists(%(IMBAManifestRc.Identity))" />
+
+		<Delete Files="@(IMBAManifestH)" />
+		<Delete Files="@(IMBAManifestRc)" />
+		<Delete Files="@(IMBAManifestBin)" />
+
+	</Target>
+
+	<Target Name="IMBALinkManifestFile" AfterTargets="CoreCompile" Inputs="@(IMBAManifest)" Outputs="@(IMBAManifest->'%(ResourcesDll)')" DependsOnTargets="IMBACompileManifestFileRes" >
+
+		<ItemGroup>
+			<IMBAManifestRes Include="@(IMBAManifestRc->'%(RelativeDir)%(Filename).res')" />
+		</ItemGroup>
+
+		<IMBALink Files="@(IMBAManifestRes)" Out="@(IMBAManifest->'%(RelativeDir)%(Filename).dll')" ToolPath="$(IMBAToolsPath)" Condition="'@(IMBAManifestRes)' != ''" />
+
+		<Delete Files="@(IMBAManifestRes)" />
+
+	</Target>
+
+	<Target Name="IMBACopyFilesToOutputDirectory" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="IMBALinkManifestFile">
+
+		<Copy SourceFiles="@(IMBAManifest)"
+			  DestinationFolder="$(OutDir)"
+			  SkipUnchangedFiles="$(SkipCopyUnchangedFiles)" 
+			  OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" 
+			  Retries="$(CopyRetryCount)" 
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" 
+			  UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)" 
+			  Condition="Exists(@(IMBAManifest))">
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+		</Copy>
+
+		<Copy SourceFiles="@(IMBAManifest->'%(ResourcesDll)')"
+			  DestinationFolder="$(OutDir)"
+			  SkipUnchangedFiles="$(SkipCopyUnchangedFiles)"
+			  OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+			  Retries="$(CopyRetryCount)"
+			  RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+			  UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)"
+			  Condition="Exists(@(IMBAManifest->'%(ResourcesDll)'))">
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+		</Copy>
+	</Target>
+
+	<ItemGroup>
+		<IMBAManifestOut Include="@(IMBAManifest->'$(OutDir)%(Filename)%(Extension)')" >
+			<ResourcesDll>@(IMBAManifest->'$(OutDir)%(Filename).dll')</ResourcesDll>
+		</IMBAManifestOut>
+	</ItemGroup>
+
+	<Target Name="IMBAUninstallManifest" AfterTargets="UnmanagedUnregistration" Condition="'$(IMBASkipInstallManifest)' != 'true'">
+		<IMBAUnlodctr Manifest="@(IMBAManifestOut)" Condition="Exists('%(Identity)')" />
+		<IMBAWevtutil Uninstall="true" Source="@(IMBAManifestOut)" Condition="Exists('%(Identity)')" />
+	</Target>
+	
+	<Target Name="IMBAInstallManifest" AfterTargets="UnmanagedRegistration" DependsOnTargets="IMBACopyFilesToOutputDirectory" Condition="'$(IMBASkipInstallManifest)' != 'true'">
+		<IMBALodctr Manifest="@(IMBAManifestOut)" Condition="Exists('%(Identity)') AND '$(IMBAProvidersCountersExists)' == 'true'"/>
+		<IMBAWevtutil Source="@(IMBAManifestOut)" ResourcesFile="%(ResourcesDll)" MessagesFile="%(ResourcesDll)" Condition="Exists('%(Identity)') AND '$(IMBAProvidersEventsExists)' == 'true'"/>
+	</Target>
+
+</Project>
